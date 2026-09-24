@@ -33,9 +33,17 @@ def main():
             created_by text NOT NULL
         )"""
     )
+    cur.execute(
+        """CREATE TABLE IF NOT EXISTS blind_codes (
+            lot text PRIMARY KEY,
+            code text NOT NULL UNIQUE,
+            created_by text NOT NULL,
+            created_at timestamptz NOT NULL DEFAULT now()
+        )"""
+    )
     cur.execute("SELECT COUNT(*) FROM cuppings")
     if cur.fetchone()[0] == 0:
-        for lot, aroma, taste, liquor in (("春茶-A", 8, 8, 7), ("夏茶-C", 5, 4, 6)):
+        for lot, aroma, taste, liquor in (("春茶-A", 8, 8, 7), ("夏茶-C", 5, 4, 6), ("春茶甲", 8, 9, 8)):
             verdict, note, score = weigh(aroma, taste, liquor)
             cur.execute(
                 """INSERT INTO cuppings (lot, aroma, taste, liquor, score, verdict, note, created_by)

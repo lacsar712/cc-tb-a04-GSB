@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block body %}
+{% if can_write %}
+<form method="post" action="{{ url_for('issue_code') }}">
+  <h2>发暗码</h2>
+  <input name="lot" list="lots" placeholder="批次真名" required />
+  <datalist id="lots">
+    {% for lot in lots %}<option value="{{ lot }}">{% endfor %}
+  </datalist>
+  <button>生成六位暗码</button>
+  <p>同一批次重复提交不会重发，暗码一经发出不改变。</p>
+</form>
+<form method="post" action="{{ url_for('rename_lot') }}">
+  <h2>改正批次真名</h2>
+  <input name="old_lot" list="lots" placeholder="原真名" required />
+  <input name="new_lot" placeholder="新真名" required />
+  <button>改正</button>
+  <p>只改真名，已发出的暗码保持不变。</p>
+</form>
+<table>
+  <thead><tr><th>真名</th><th>暗码</th><th>生成人</th><th>生成时刻</th></tr></thead>
+  <tbody>
+    {% for e in entries %}
+    <tr>
+      <td>{{ e.lot }}</td>
+      <td>{{ e.code }}</td>
+      <td>{{ e.created_by }}</td>
+      <td>{{ e.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<table>
+  <thead><tr><th>暗码</th></tr></thead>
+  <tbody>
+    {% for e in entries %}<tr><td>{{ e.code }}</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

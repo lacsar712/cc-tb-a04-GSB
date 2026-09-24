@@ -19,6 +19,8 @@
     <strong>茶叶拼配审评台</strong>
     {% if session.user %}
       <span>{{ session.user }}</span>
+      <a href="{{ url_for('home') }}">总表</a>
+      <a href="{{ url_for('codes') }}">暗码册</a>
       <a href="{{ url_for('logout') }}">退出</a>
     {% endif %}
   </header>

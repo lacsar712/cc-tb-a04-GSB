@@ -1,5 +1,9 @@
 <tr>
-  <td>{{ row.lot }}</td>
+  <td>
+    {% if can_write %}{{ row.lot }}
+    {% elif row.code %}<span class="blind">{{ row.code }}</span>
+    {% else %}<em>未发码</em>{% endif %}
+  </td>
   <td>{{ row.score }}</td>
   <td class="{% if row.verdict == '通过' %}pass{% else %}fail{% endif %}">{{ row.verdict }}</td>
   <td>{{ row.note }}</td>

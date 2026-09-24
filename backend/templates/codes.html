@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block body %}
+<h2>暗码册</h2>
+
+{% if can_write %}
+  <form method="post" action="{{ url_for('issue_code') }}">
+    <h3>发暗码</h3>
+    <input name="lot" list="pending-lots" placeholder="批次真名" required />
+    <datalist id="pending-lots">
+      {% for lot in pending %}<option value="{{ lot }}"></option>{% endfor %}
+    </datalist>
+    <button>生成六位暗码</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr><th>真名</th><th>暗码</th><th>生成人</th><th>生成时刻</th><th>改正真名</th></tr>
+    </thead>
+    <tbody>
+      {% for row in code_rows %}
+      <tr>
+        <td>{{ row.lot }}</td>
+        <td class="blind">{{ row.code }}</td>
+        <td>{{ row.created_by }}</td>
+        <td>{{ row.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>
+          <form class="inline" method="post" action="{{ url_for('rename_lot') }}">
+            <input type="hidden" name="old_lot" value="{{ row.lot }}" />
+            <input name="new_lot" placeholder="改正后真名" required />
+            <button>改正</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p>改正真名只改批次名称，已发暗码不变。</p>
+{% else %}
+  <p>观察员仅可见暗码列。</p>
+  <table>
+    <thead><tr><th>暗码</th></tr></thead>
+    <tbody>
+      {% for row in code_rows %}
+      <tr><td class="blind">{{ row.code }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}
